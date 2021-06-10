@@ -41,6 +41,8 @@ let imagePointer = 0;
   container.style.backgroundColor = "#045af7";
   const imageTextPos = document.querySelector("#img0 p");
   imageTextPos.style.color = "white";
+  const imagePos = document.querySelector("#img0 img");
+  imagePos.style.border = `0.17rem solid rgb(51, 237, 243)`;
 })();
 
 // Add Event Listener for all the images
@@ -52,7 +54,6 @@ for (let imageID = 0; imageID < imageContainer.length; imageID++) {
   imagePos.setAttribute("src", imageContainer[imageID]["previewImage"]);
   const imageInfo = document.querySelector(`${where} p`);
   imageInfo.innerText = imageContainer[imageID]["title"];
-  console.log(imageInfo);
   container.addEventListener("click", function () {
     let allOther = document.querySelectorAll("#menu .img");
     let cnt = 0;
@@ -61,16 +62,20 @@ for (let imageID = 0; imageID < imageContainer.length; imageID++) {
       let target = `#img${cnt}`;
       let textColor = document.querySelector(`${target} p`);
       textColor.style.color = "black";
+      let imageTarget = document.querySelector(`#img${cnt} img`);
+      imageTarget.style.border = "0.17rem solid rgb(61, 2, 12)";
       cnt++;
     });
     container.style.backgroundColor = "#045af7";
     imageInfo.style.color = "white";
-    const previewLocation = document.querySelector("#preview img");
+    let imagePos = document.querySelector(`${where} img`);
+    imagePos.style.border = `0.17rem solid rgb(51, 237, 243)`;
+    let previewLocation = document.querySelector("#preview img");
     previewLocation.setAttribute(
       "src",
       imageContainer[imageID]["previewImage"]
     );
-    const captionLocation = document.querySelector("#preview figcaption");
+    let captionLocation = document.querySelector("#preview figcaption");
     captionLocation.innerText = imageContainer[imageID]["title"];
     imagePointer = imageID;
   });
@@ -101,9 +106,12 @@ function upDownEvent(e) {
   const newContainer = document.querySelector(`#img${newImagePointer}`);
   const oldMenu = document.querySelector(`#img${imagePointer} p`);
   const newMenu = document.querySelector(`#img${newImagePointer} p`);
+  const oldImagePos = document.querySelector(`#img${imagePointer} img`);
+  const newImagePos = document.querySelector(`#img${newImagePointer} img`);
 
   oldMenu.style.color = "black";
   oldContainer.style.backgroundColor = "";
+  oldImagePos.style.border = "0.17rem solid rgb(61, 2, 12)";
 
   const previewLocation = document.querySelector("#preview img");
   previewLocation.setAttribute(
@@ -114,6 +122,7 @@ function upDownEvent(e) {
   captionLocation.innerText = imageContainer[newImagePointer]["title"];
   newContainer.style.backgroundColor = "#045af7";
   newMenu.style.color = "white";
+  newImagePos.style.border = "0.17rem solid rgb(51, 237, 243)";
 
   imagePointer = newImagePointer;
 }
