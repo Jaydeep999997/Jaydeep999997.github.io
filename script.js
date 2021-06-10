@@ -26,6 +26,8 @@ let imageContainer = [
   },
 ];
 
+// Pointer which tracks of current image which we are displaying
+
 let imagePointer = 0;
 
 // Initialize the image pointer to the first image and change the style accordingly using IIFE
@@ -79,7 +81,7 @@ for (let imageID = 0; imageID < imageContainer.length; imageID++) {
 
 function upDownEvent(e) {
   e = e || window.event;
-  let newImagePointer = imagePointer;
+  let newImagePointer = imagePointer; // Index of new image which we display
   if (e.keyCode == "38") {
     // up
     newImagePointer = Math.max(0, newImagePointer - 1);
@@ -88,9 +90,13 @@ function upDownEvent(e) {
     newImagePointer = Math.min(imageContainer.length - 1, newImagePointer + 1);
   }
 
+  // In case we are on the first image and pressed up or we are on the last image and pressed down
   if (newImagePointer == imagePointer) {
     return;
   }
+
+  // Reset the old image property and add new image property
+
   const oldContainer = document.querySelector(`#img${imagePointer}`);
   const newContainer = document.querySelector(`#img${newImagePointer}`);
   const oldMenu = document.querySelector(`#img${imagePointer} p`);
@@ -111,5 +117,7 @@ function upDownEvent(e) {
 
   imagePointer = newImagePointer;
 }
+
+// What to do when Up Down Key is pressed
 
 document.onkeydown = upDownEvent;
