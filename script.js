@@ -45,6 +45,16 @@ let imagePointer = 0;
   imagePos.style.border = `0.17rem solid rgb(51, 237, 243)`;
 })();
 
+// Create a description and add truncation class in it.
+
+function createDescription(className, string) {
+  let target = document.createElement("span");
+  target.classList.add(`${className}`);
+  target.innerText = string;
+
+  return target;
+}
+
 // Add Event Listener for all the images
 
 for (let imageID = 0; imageID < imageContainer.length; imageID++) {
@@ -53,7 +63,22 @@ for (let imageID = 0; imageID < imageContainer.length; imageID++) {
   const imagePos = document.querySelector(`${where} img`);
   imagePos.setAttribute("src", imageContainer[imageID]["previewImage"]);
   const imageInfo = document.querySelector(`${where} p`);
-  imageInfo.innerText = imageContainer[imageID]["title"];
+
+  let half = imageContainer[imageID]["title"].length / 2;
+  imageInfo.appendChild(
+    createDescription(
+      "truncate_left",
+      imageContainer[imageID]["title"].slice(0, half)
+    )
+  );
+  imageInfo.appendChild(
+    createDescription(
+      "truncate_right",
+      imageContainer[imageID]["title"].slice(half)
+    )
+  );
+
+  console.log(imageInfo);
   container.addEventListener("click", function () {
     let allOther = document.querySelectorAll("#menu .img");
     let cnt = 0;
