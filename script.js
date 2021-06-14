@@ -1,3 +1,5 @@
+// List of images to display along with title
+
 let imageContainer = [
   {
     previewImage:
@@ -26,86 +28,67 @@ let imageContainer = [
   },
 ];
 
-// Pointer which tracks of current image which we are displaying
+// Pointer which tracks of current image which we are displaying (-1 => nothing is displayed initially)
+let imagePointer = -1;
 
-let imagePointer = 0;
-
-// Initialize the image pointer to the first image and change the style accordingly using IIFE
-
-(function () {
-  const previewLocation = document.querySelector("#preview img");
-  previewLocation.setAttribute("src", imageContainer[0]["previewImage"]);
-  const captionLocation = document.querySelector("#preview figcaption");
-  captionLocation.innerText = imageContainer[0]["title"];
-  const container = document.querySelector("#img0");
-  container.style.backgroundColor = "#045af7";
-  const imageTextPos = document.querySelector("#img0 p");
-  imageTextPos.style.color = "white";
-  const imagePos = document.querySelector("#img0 img");
-  imagePos.style.border = `0.17rem solid rgb(51, 237, 243)`;
-})();
-
-// Create a description and add truncation class in it.
-
-function createDescription(className, string) {
-  let target = document.createElement("span");
-  target.classList.add(`${className}`);
-  target.innerText = string;
-
-  return target;
+// Set thumbnail and title for image with id = 'imageID'
+function setThumbnail(imageID) {
+  // const container = document.querySelector(`#img${imageID}`);
+  const imagePos = document.querySelector(`#img${imageID} img`);
+  document
+    .querySelector(`#img${imageID} img`)
+    .setAttribute("src", imageContainer[imageID]["previewImage"]);
+  document.querySelector(`#img${imageID} p`).innerText =
+    imageContainer[imageID]["title"];
 }
 
-// Add Event Listener for all the images
+// Switching between two images 'prevID' => 'currID'
+function switchImage(prevID, currID) {
+  if (prevID !== -1) {
+    // Initially prevID = -1
+    let prevDiv = document.querySelector(`#img${prevID}`);
+    prevDiv.classList.remove("highlight");
+  }
+  let currDiv = document.querySelector(`#img${currID}`);
+  currDiv.classList.add("highlight");
+  document
+    .querySelector("#preview img")
+    .setAttribute("src", imageContainer[currID]["previewImage"]);
+  document.querySelector("#preview figcaption").innerText =
+    imageContainer[currID]["title"];
+  imagePointer = currID;
+}
 
-for (let imageID = 0; imageID < imageContainer.length; imageID++) {
-  let where = `#img${imageID}`;
-  const container = document.querySelector(where);
-  const imagePos = document.querySelector(`${where} img`);
-  imagePos.setAttribute("src", imageContainer[imageID]["previewImage"]);
-  const imageInfo = document.querySelector(`${where} p`);
-
-  let half = imageContainer[imageID]["title"].length / 2;
-  imageInfo.appendChild(
-    createDescription(
-      "truncate_left",
-      imageContainer[imageID]["title"].slice(0, half)
-    )
-  );
-  imageInfo.appendChild(
-    createDescription(
-      "truncate_right",
-      imageContainer[imageID]["title"].slice(half)
-    )
-  );
-
-  console.log(imageInfo);
+// Add event listener for 'click' event
+function switchEventListener(imageID) {
+  const container = document.querySelector(`#img${imageID}`);
   container.addEventListener("click", function () {
-    let allOther = document.querySelectorAll("#menu .img");
-    let cnt = 0;
-    allOther.forEach((item) => {
-      item.style.backgroundColor = "";
-      let target = `#img${cnt}`;
-      let textColor = document.querySelector(`${target} p`);
-      textColor.style.color = "black";
-      let imageTarget = document.querySelector(`#img${cnt} img`);
-      imageTarget.style.border = "0.17rem solid rgb(61, 2, 12)";
-      cnt++;
-    });
-    container.style.backgroundColor = "#045af7";
-    imageInfo.style.color = "white";
-    let imagePos = document.querySelector(`${where} img`);
-    imagePos.style.border = `0.17rem solid rgb(51, 237, 243)`;
-    let previewLocation = document.querySelector("#preview img");
-    previewLocation.setAttribute(
-      "src",
-      imageContainer[imageID]["previewImage"]
-    );
-    let captionLocation = document.querySelector("#preview figcaption");
-    captionLocation.innerText = imageContainer[imageID]["title"];
-    imagePointer = imageID;
+    if (imageID == imagePointer) {
+      return;
+    }
+    switchImage(imagePointer, imageID);
   });
-  imagePointer = 0;
 }
+
+// Create a new container having img and p fields
+function getNewElement(imageID) {
+  let container = document.createElement("div");
+  container.classList.add("img");
+  container.setAttribute("id", `img${imageID}`);
+  container.appendChild(document.createElement("img"));
+  container.appendChild(document.createElement("p"));
+  return container;
+}
+
+// Initialize thumbnails of every image
+for (let imageID = 0; imageID < imageContainer.length; imageID++) {
+  document.querySelector("#menu").appendChild(getNewElement(imageID));
+  setThumbnail(imageID);
+  switchEventListener(imageID);
+}
+
+// Set initial image as the first one
+switchImage(-1, 0);
 
 // Which actions to take upon up down key press
 
@@ -119,39 +102,42 @@ function upDownEvent(e) {
     // down
     newImagePointer = Math.min(imageContainer.length - 1, newImagePointer + 1);
   }
-
-  // In case we are on the first image and pressed up or we are on the last image and pressed down
-  if (newImagePointer == imagePointer) {
-    return;
-  }
-
-  // Reset the old image property and add new image property
-
-  const oldContainer = document.querySelector(`#img${imagePointer}`);
-  const newContainer = document.querySelector(`#img${newImagePointer}`);
-  const oldMenu = document.querySelector(`#img${imagePointer} p`);
-  const newMenu = document.querySelector(`#img${newImagePointer} p`);
-  const oldImagePos = document.querySelector(`#img${imagePointer} img`);
-  const newImagePos = document.querySelector(`#img${newImagePointer} img`);
-
-  oldMenu.style.color = "black";
-  oldContainer.style.backgroundColor = "";
-  oldImagePos.style.border = "0.17rem solid rgb(61, 2, 12)";
-
-  const previewLocation = document.querySelector("#preview img");
-  previewLocation.setAttribute(
-    "src",
-    imageContainer[newImagePointer]["previewImage"]
-  );
-  const captionLocation = document.querySelector("#preview figcaption");
-  captionLocation.innerText = imageContainer[newImagePointer]["title"];
-  newContainer.style.backgroundColor = "#045af7";
-  newMenu.style.color = "white";
-  newImagePos.style.border = "0.17rem solid rgb(51, 237, 243)";
-
-  imagePointer = newImagePointer;
+  switchImage(imagePointer, newImagePointer);
 }
 
-// What to do when Up Down Key is pressed
+// Truncation Part depending on width requirement and width availability
+function setText(item, title) {
+  let maxLength = Math.floor(
+    (title.length * item.clientWidth) / item.scrollWidth
+  );
+  if (item.scrollWidth > item.clientWidth) {
+    // Don't have enough space for the content to fit
+    maxLength -= 3;
+  }
+  let newTitle = "";
+  let lLength = maxLength / 2;
+  newTitle += title.substr(0, lLength);
+  if (item.scrollWidth > item.clientWidth) {
+    newTitle += "...";
+  }
+  let rLength = maxLength - lLength;
+  newTitle += title.substr(title.length - rLength, rLength);
+  item.innerText = newTitle;
+}
+
+// Call setText for every thumbnail
+function truncate() {
+  let thumbnails = document.querySelectorAll(".img");
+  console.log(thumbnails);
+  thumbnails.forEach((item, Index) =>
+    setText(item.querySelector("p"), imageContainer[Index]["title"])
+  );
+}
 
 document.onkeydown = upDownEvent;
+
+// Initially set the thumbnail title
+truncate();
+
+// On every window resize set the title appropriately after performing truncation
+window.addEventListener("resize", truncate);
