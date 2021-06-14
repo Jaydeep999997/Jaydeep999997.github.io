@@ -37,7 +37,7 @@ body {
   justify-content: center;
   align-content: center;
   align-items: center;
-  transition: all 0.2s ease;
+  transition: all 0.05s ease;
 }
 
 .img img {
