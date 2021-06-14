@@ -110,6 +110,7 @@ function setText(item, title) {
   let maxLength = Math.floor(
     (title.length * item.clientWidth) / item.scrollWidth
   );
+  maxLength = Math.min(maxLength, title.length);
   if (item.scrollWidth > item.clientWidth) {
     // Don't have enough space for the content to fit
     maxLength -= 3;
