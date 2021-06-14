@@ -107,29 +107,26 @@ function upDownEvent(e) {
 
 // Truncation Part depending on width requirement and width availability
 function setText(item, title) {
-  let maxLength = Math.floor(
-    (title.length * item.clientWidth) / item.scrollWidth
-  );
-  maxLength = Math.min(maxLength, title.length);
+  item.textContent = title;
+  // Don't have enough space for the content to fit
   if (item.scrollWidth > item.clientWidth) {
-    // Don't have enough space for the content to fit
+    let maxLength = Math.floor(
+      (title.length * item.clientWidth) / item.scrollWidth
+    );
     maxLength -= 3;
-  }
-  let newTitle = "";
-  let lLength = maxLength / 2;
-  newTitle += title.substr(0, lLength);
-  if (item.scrollWidth > item.clientWidth) {
+    let newTitle = "";
+    let lLength = Math.ceil(maxLength / 2.0);
+    newTitle += title.substr(0, lLength);
     newTitle += "...";
+    let rLength = maxLength - lLength;
+    newTitle += title.substr(title.length - rLength, rLength);
+    item.textContent = newTitle;
   }
-  let rLength = maxLength - lLength;
-  newTitle += title.substr(title.length - rLength, rLength);
-  item.innerText = newTitle;
 }
 
 // Call setText for every thumbnail
 function truncate() {
   let thumbnails = document.querySelectorAll(".img");
-  console.log(thumbnails);
   thumbnails.forEach((item, Index) =>
     setText(item.querySelector("p"), imageContainer[Index]["title"])
   );
@@ -137,7 +134,6 @@ function truncate() {
 
 document.onkeydown = upDownEvent;
 
-// Initially set the thumbnail title
 truncate();
 
 // On every window resize set the title appropriately after performing truncation
