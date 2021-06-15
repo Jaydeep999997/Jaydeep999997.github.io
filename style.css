@@ -93,6 +93,7 @@ figcaption {
     height: auto;
   }
   #preview {
-    height: 60rem;
+    margin: 3rem auto;
+    max-width: 25rem;
   }
 }
