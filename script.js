@@ -138,3 +138,5 @@ truncate();
 
 // On every window resize set the title appropriately after performing truncation
 window.addEventListener("resize", truncate);
+
+window.onload = truncate();
